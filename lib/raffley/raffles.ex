@@ -48,7 +48,9 @@ defmodule Raffley.Raffles do
     Repo.get!(Raffle, id)
   end
 
-  def feartured_raffles(raffle) do
+  def featured_raffles(raffle) do
+    Process.sleep(2000)
+
     Raffle
     |> where(status: :open)
     |> where([r], r.id != ^raffle.id)
