@@ -9,6 +9,8 @@ defmodule Raffley.Raffles.Raffle do
     field :status, Ecto.Enum, values: [:upcoming, :open, :closed], default: :upcoming
     field :ticket_price, :integer, default: 1
 
+    belongs_to :charity, Raffley.Charities.Charity
+
     timestamps(type: :utc_datetime)
   end
 
