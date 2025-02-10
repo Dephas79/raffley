@@ -2,9 +2,15 @@ defmodule RaffleyWeb.RaffleyWeb.AdminRaffleLive.Form do
   use RaffleyWeb, :live_view
   alias Raffley.Admin
   alias Raffley.Raffles.Raffle
+  alias Raffley.Charities
 
   def mount(params, _session, socket) do
-    {:ok, apply_action(socket, socket.assigns.live_action, params)}
+    socket =
+      socket
+      |> assign(:charity_options, Charities.charity_names_and_ids())
+      |> apply_action(socket.assigns.live_action, params)
+
+    {:ok, socket}
   end
 
   defp apply_action(socket, :new, _params) do
@@ -47,6 +53,14 @@ defmodule RaffleyWeb.RaffleyWeb.AdminRaffleLive.Form do
         options={[:upcoming, :open, :closed]}
       />
 
+      <.input
+        field={@form[:charity_id]}
+        type="select"
+        label="Charity"
+        prompt="Choose a charity"
+        options={@charity_options}
+      />
+
       <.input field={@form[:image_path]} label="Image Path" />
       <:actions>
         <.button phx-disable-with="Saving...">Save Raffle</.button>
@@ -87,7 +101,6 @@ defmodule RaffleyWeb.RaffleyWeb.AdminRaffleLive.Form do
   end
 
   defp save_raffle(socket, :edit, raffle_params) do
-
     case Admin.update_raffle(socket.assigns.raffle, raffle_params) do
       {:ok, _raffle} ->
         socket =
@@ -103,6 +116,4 @@ defmodule RaffleyWeb.RaffleyWeb.AdminRaffleLive.Form do
         {:noreply, socket}
     end
   end
-
-
 end
